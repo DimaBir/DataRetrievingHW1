@@ -1,4 +1,5 @@
 import xml.etree.ElementTree as ElementTree
+from StopWordsFilter import FilterStopWords
 
 
 def parsetrecfile(pathtofile):
@@ -18,7 +19,7 @@ def parsetrecfile(pathtofile):
 
     # Simple loop through each document and add results to dictionary
     for doc in root:
-        results[doc.find('DOCNO').text.strip()] = doc.find('TEXT').text.strip()
+        # Key : DOCNO, VALUE: SET OF WORDS WITHOUT STOPWORDS
+        results[doc.find('DOCNO').text.strip()] = FilterStopWords(doc.find('TEXT').text.strip())
 
     return results
-
