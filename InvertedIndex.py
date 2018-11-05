@@ -83,12 +83,6 @@ class inverted_index(object):
     def __init__(self):
         self.index = {}
         self.docno_dict = []
-        self.full_list = DoubleList()
-
-    def populate_full_list(self):
-        index_size = len(self.docno_dict)
-        for x in range(index_size):
-            self.full_list.append(x)
 
     def eval(self, query):
         if query.type == TreeNodeType.DATA:
@@ -130,11 +124,16 @@ class inverted_index(object):
                     right_it = right.get_next()
         if query.type == TreeNodeType.NOT:
             left = self.eval(query.left)
+            right = self.eval(query.right)
             left.init_iterator()
+            right.init_iterator()
             left_it = left.get_next()
-            retval = self.full_list
+            right_it = right.get_next()
             while left_it is not None:
-                retval.remove(left_it.data)
+                while right_it is not None and right_it.data < left_it.data:
+                    right_it = right.get_next()
+                if right_it is not None and right_it.data > left_it.data:
+                    retval.append(left_it.data)
                 left_it = left.get_next()
         return retval
 

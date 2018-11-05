@@ -48,8 +48,9 @@ def make_query_aux(lres):
         tree_node = TreeNode(TreeNodeType.AND, left=make_query_aux(left_side), right=make_query_aux(right_side))
         return tree_node
     if "NOT" in lres:
-        left_side = lres[lres.index("NOT") + 1:]
-        tree_node = TreeNode(TreeNodeType.NOT, left=make_query_aux(left_side))
+        left_side = lres[:lres.index("NOT")]
+        right_side = lres[lres.index("NOT") + 1:]
+        tree_node = TreeNode(TreeNodeType.NOT, left=make_query_aux(left_side), right=make_query_aux(right_side))
         return tree_node
 
 
