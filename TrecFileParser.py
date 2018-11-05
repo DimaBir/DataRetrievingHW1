@@ -20,9 +20,12 @@ def parsetrecfile(pathtofile):
     # Simple loop through each document and add results to dictionary
     for doc in root:
         textSet = FilterStopWords(doc.find('TEXT').text.strip())
-        if textSet == set():
+        if textSet is None:
             continue
         # Key : DOCNO, VALUE: SET OF WORDS WITHOUT STOPWORDS
         results[doc.find('DOCNO').text.strip()] = textSet
 
     return results
+
+
+result = parsetrecfile('test.trec')
