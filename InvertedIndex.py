@@ -1,7 +1,7 @@
 from os import listdir
 from os.path import isfile, join
 import pickle
-
+from trecFileParser import parsetrecfile
 
 class Node(object):
     def __init__(self, data, prev, next):
@@ -66,7 +66,7 @@ def InvertedIndex():
     path = r"/data/HW1/"
     trec_files = [f for f in listdir(path) if isfile(join(path, f))]
     for trec_file in trec_files:
-        trec_dict = get_info_dict(trec_file)
+        trec_dict = parsetrecfile(trec_file)
         for docno, text in trec_dict.items():
             internal_index = len(docno_dict)
             docno_dict.append(docno)
@@ -76,3 +76,5 @@ def InvertedIndex():
                 index[word].append(internal_index)
     with open('/home/student/HW1/index', 'wb') as f:
         pickle.dump(index, f)
+    with open('/home/student/HW1/index_dict', 'wb') as f:
+        pickle.dump(docno_dict, f)

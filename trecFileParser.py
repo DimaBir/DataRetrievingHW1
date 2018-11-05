@@ -22,10 +22,3 @@ def parsetrecfile(pathtofile):
 
     return results
 
-
-result = parsetrecfile('test.trec')
-
-print("Modified Dict : ")
-for (key, value) in result.items():
-    print(key, " :: ", value)
-
