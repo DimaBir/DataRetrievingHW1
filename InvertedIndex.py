@@ -30,16 +30,19 @@ class DoubleList(object):
     def init_iterator(self):
         self.iterator = self.head
 
+    def init_reverse_iterator(self):
+        self.iterator = self.tail
+
     def get_next(self):
         if self.iterator is None:
-            self.init_iterator()
+            return None
         retval = self.iterator
         self.iterator = self.iterator.next
         return retval
 
     def get_prev(self):
         if self.iterator is None:
-            self.iterator = self.tail
+            return None
         retval = self.iterator
         self.iterator = self.iterator.prev
         return retval
@@ -98,12 +101,12 @@ class inverted_index(object):
             while left_it is not None and right_it is not None:
                 if left_it.data == right_it.data:
                     retval.append(left_it.data)
-                    left_it = left_it.get_next()
-                    right_it = right_it.get_next()
+                    left_it = left.get_next()
+                    right_it = right.get_next()
                 if left_it.data < right_it.data:
-                    left_it = left_it.get_next()
+                    left_it = left.get_next()
                 else:
-                    right_it = right_it.get_next()
+                    right_it = right.get_next()
         if query.type == TreeNodeType.OR:
             left = self.eval(query.left)
             right = self.eval(query.right)
@@ -144,15 +147,19 @@ def InvertedIndex():
     path = r"/data/HW1/AP_Coll_Parsed/"
     trec_files = [f for f in listdir(path) if isfile(join(path, f))]
     for trec_file in trec_files:
-        trec_dict = parsetrecfile(trec_file)
+        trec_dict = parsetrecfile(path + trec_file)
         for docno, text in trec_dict.items():
             internal_index = len(index_object.docno_dict)
             index_object.docno_dict.append(docno)
-            for word in set(text.split()):
+            for word in text:
                 if word not in index_object.index:
                     index_object.index[word] = DoubleList()
-                    index_object.index[word].append(internal_index)
+                index_object.index[word].append(internal_index)
     with open('/home/student/HW1/index', 'wb') as f:
         pickle.dump(index_object.index, f)
     with open('/home/student/HW1/index_dict', 'wb') as f:
         pickle.dump(index_object.docno_dict, f)
+
+
+if __name__ == "__main__":
+    InvertedIndex()

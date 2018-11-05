@@ -9,7 +9,8 @@ def string_parentheses_parse(string):
     first = string.find("(")
     beginning = 0
     while first != -1:
-        retval += string[beginning: first - 1].split()
+        if first != beginning:
+            retval += string[beginning: first - 1].split()
         i = first
         parentheses_level = 1
         start = first + 1
@@ -65,18 +66,24 @@ def BooleanRetrieval():
         index_object.index = pickle.load(f)
     with open('/home/student/HW1/index_dict', 'rb') as f:
         index_object.docno_dict = pickle.load(f)
-    index_object.populate_full_list()
     with open('/data/HW1/BooleanQueries.txt', 'rb') as q:
         with open('/home/student/HW1/Part_2.txt') as f:
             queries = q.readlines()
             for query_string in queries:
-                query_string_clean = query_string.strip()
+                query_string_clean = query_string.strip().decode('ASCII')
                 query_tree = make_query(query_string_clean)
                 reslist = index_object.eval(query_tree)
-                for x in reslist:
-                    sstr = str(index_object.docno_dict[x]) + " "
+                reslist.init_iterator()
+                reslist_it = reslist.get_next()
+                sstr = ""
+                while reslist_it is not None:
+                    sstr += str(index_object.docno_dict[reslist_it.data]) + " "
+                    reslist_it = reslist.get_next()
                 if sstr.endswith(" "):
                     sstr = sstr[:-1]
                 sstr += "\n"
-                f.write(sstr)
+                f.write(sstr.encode('ASCII'))
 
+
+if __name__ == "__main__":
+    BooleanRetrieval()
