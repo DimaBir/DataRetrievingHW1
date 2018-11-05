@@ -1,7 +1,21 @@
 import xml.etree.ElementTree as ElementTree
+from xml.etree.ElementTree import ParseError
 from StopWordsFilter import FilterStopWords
 
 
+def FindMissingTag(xml):
+    try:
+        tree = ElementTree.fromstring(xml)
+        return tree
+    except ParseError as e:
+        formatted_e = str(e)
+        line = int(formatted_e[formatted_e.find("line ") + 5: formatted_e.find(",")])
+        column = int(formatted_e[formatted_e.find("column ") + 7:])
+        split_str = xml.split("\n")
+        print
+        "{}\n{}^".format(split_str[line - 1], len(split_str[line - 1][0:column]) * "-")
+
+s
 def parsetrecfile(pathtofile):
 
     # Reading file
@@ -12,7 +26,7 @@ def parsetrecfile(pathtofile):
     xml = '<ROOT>' + xml + '</ROOT>'
 
     # Get all xml tree via root element as ElementTree
-    root = ElementTree.fromstring(xml)
+    root = FindMissingTag(xml)
 
     # Initialize reuslt dictionary
     results = {}
