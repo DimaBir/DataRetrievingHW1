@@ -15,7 +15,7 @@ def FindMissingTag(xml):
         print
         "{}\n{}^".format(split_str[line - 1], len(split_str[line - 1][0:column]) * "-")
 
-s
+
 def parsetrecfile(pathtofile):
 
     # Reading file
@@ -42,5 +42,3 @@ def parsetrecfile(pathtofile):
             print("Doc {} has no text".format(key))
     return results
 
-
-result = parsetrecfile('test.trec')
