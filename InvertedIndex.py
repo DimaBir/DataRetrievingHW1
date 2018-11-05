@@ -1,7 +1,7 @@
 from os import listdir
 from os.path import isfile, join
 import pickle
-from trecFileParser import parsetrecfile
+from TrecFileParser import parsetrecfile
 
 class Node(object):
     def __init__(self, data, prev, next):
