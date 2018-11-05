@@ -1,62 +1,81 @@
 from os import listdir
 from os.path import isfile, join
 import pickle
+from InvertedIndex import TreeNodeType, TreeNode, inverted_index, DoubleListNode, DoubleList
 
 
-class Node(object):
-    def __init__(self, data, prev, next):
-        self.data = data
-        self.prev = prev
-        self.next = next
+def string_parentheses_parse(string):
+    retval = []
+    first = string.find("(")
+    beginning = 0
+    while first != -1:
+        retval += string[beginning: first - 1].split()
+        i = first
+        parentheses_level = 1
+        start = first + 1
+        end = 0
+        while parentheses_level > 0:
+            i += 1
+            if string[i] == "(":
+                parentheses_level += 1
+            if string[i] == ")":
+                parentheses_level -= 1
+        end = i
+        retval.append(string_parentheses_parse(string[start: end]))
+        beginning = i + 1
+        first = string[beginning: -1].find("(")
+        if first != -1:
+            first += beginning
+    retval += string[beginning:].split()
+    return retval
 
 
-class DoubleList(object):
-    head = None
-    tail = None
-    iterator = None
-
-    def append(self, data):
-        new_node = Node(data, None, None)
-        if self.head is None:
-            self.head = self.tail = new_node
+def make_query_aux(lres):
+    if len(lres) == 1:
+        if isinstance(lres[0], list):
+            return make_query_aux(lres[0])
         else:
-            new_node.prev = self.tail
-            new_node.next = None
-            self.tail.next = new_node
-            self.tail = new_node
+            tree_node = TreeNode(TreeNodeType.DATA, data=lres[0])
+            return tree_node
+    if "OR" in lres:
+        left_side = lres[:lres.index("OR")]
+        right_side = lres[lres.index("OR")+1:]
+        tree_node = TreeNode(TreeNodeType.OR, left=make_query_aux(left_side), right=make_query_aux(right_side))
+        return tree_node
+    if "AND" in lres:
+        left_side = lres[:lres.index("AND")]
+        right_side = lres[lres.index("AND") + 1:]
+        tree_node = TreeNode(TreeNodeType.AND, left=make_query_aux(left_side), right=make_query_aux(right_side))
+        return tree_node
+    if "NOT" in lres:
+        left_side = lres[lres.index("NOT") + 1:]
+        tree_node = TreeNode(TreeNodeType.NOT, left=make_query_aux(left_side))
+        return tree_node
 
-    def init_iterator(self):
-        self.iterator = self.head
 
-    def get_next(self):
-        if self.iterator is None:
-            self.init_iterator()
-        retval = self.iterator
-        self.iterator = self.iterator.next
-        return retval
+def make_query(string):
+    list_res = string_parentheses_parse(string)
+    return make_query_aux(list_res)
 
-    def get_prev(self):
-        if self.iterator is None:
-            self.iterator = self.tail
-        retval = self.iterator
-        self.iterator = self.iterator.prev
-        return retval
 
-    def get_last(self):
-        return self.tail
-
-    def remove(self, node):
-        prev = node.prev
-        next = node.next
-        if node == self.head:
-            self.head = next
-        if node == self.tail:
-            self.tail = prev
-        if node == self.iterator:
-            self.iterator = next
-        if prev is not None:
-            prev.next = next
-        if next is not None:
-            next.prev = prev
-index = {}
+def BooleanRetrieval():
+    index_object = inverted_index()
+    with open('/home/student/HW1/index', 'rb') as f:
+        index_object.index = pickle.load(f)
+    with open('/home/student/HW1/index_dict', 'rb') as f:
+        index_object.docno_dict = pickle.load(f)
+    index_object.populate_full_list()
+    with open('/data/HW1/BooleanQueries.txt', 'rb') as q:
+        with open('/home/student/HW1/Part_2.txt') as f:
+            queries = q.readlines()
+            for query_string in queries:
+                query_string_clean = query_string.strip()
+                query_tree = make_query(query_string_clean)
+                reslist = index_object.eval(query_tree)
+                for x in reslist:
+                    sstr = str(index_object.docno_dict[x]) + " "
+                if sstr.endswith(" "):
+                    sstr = sstr[:-1]
+                sstr += "\n"
+                f.write(sstr)
 

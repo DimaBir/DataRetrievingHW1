@@ -4,7 +4,8 @@ import pickle
 from TrecFileParser import parsetrecfile
 from enum import Enum
 
-class Node(object):
+
+class DoubleListNode(object):
     def __init__(self, data, prev, next):
         self.data = data
         self.prev = prev
@@ -17,7 +18,7 @@ class DoubleList(object):
     iterator = None
 
     def append(self, data):
-        new_node = Node(data, None, None)
+        new_node = DoubleListNode(data, None, None)
         if self.head is None:
             self.head = self.tail = new_node
         else:
@@ -61,6 +62,7 @@ class DoubleList(object):
                     current_node.next.prev = None
 
             current_node = current_node.next
+
 
 class TreeNodeType(Enum):
     AND = 1
@@ -108,7 +110,6 @@ class inverted_index(object):
                     left_it = left_it.get_next()
                 else:
                     right_it = right_it.get_next()
-            return retval
         if query.type == TreeNodeType.OR:
             left = self.eval(query.left)
             right = self.eval(query.right)
@@ -119,25 +120,29 @@ class inverted_index(object):
             while left_it is not None or right_it is not None:
                 if right_it is None or left_it.data < right_it.data:
                     retval.append(left_it.data)
-                    left_it = left_it.get_next()
+                    left_it = left.get_next()
                 if left_it is None or left_it.data > right_it.data:
                     retval.append(right_it.data)
-                    right_it = right_it.get_next()
+                    right_it = right.get_next()
                 else:
                     retval.append(left_it.data)
-                    left_it = left_it.get_next()
-                    right_it = right_it.get_next()
-            return retval
+                    left_it = left.get_next()
+                    right_it = right.get_next()
         if query.type == TreeNodeType.NOT:
             left = self.eval(query.left)
             left.init_iterator()
-            self.full_list.init_iterator()
+            left_it = left.get_next()
+            retval = self.full_list
+            while left_it is not None:
+                retval.remove(left_it.data)
+                left_it = left.get_next()
+        return retval
 
 
 
 def InvertedIndex():
     index_object = inverted_index()
-    path = r"/data/HW1/"
+    path = r"/data/HW1/AP_Coll_Parsed/"
     trec_files = [f for f in listdir(path) if isfile(join(path, f))]
     for trec_file in trec_files:
         trec_dict = parsetrecfile(trec_file)
