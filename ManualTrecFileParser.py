@@ -46,13 +46,13 @@ def RegexParseTrecFile(pathtofile):
             continue
 
         # Transform regex match from List to string
-        textTagRegexResultListString = ''.join(textTagRegexResultList)
+        textTagRegexResultString = ''.join(textTagRegexResultList)
 
         # Remove end of lines and tabs from string
-        textTagRegexResultListClear = textTagRegexResultListString.replace('\n', ' ').replace('\r', '')
+        textTagRegexResultClear = textTagRegexResultString.replace('\n', ' ').replace('\r', '')
 
         # Remove all Stop Words from text
-        text = FilterStopWords(textTagRegexResultListClear)
+        text = FilterStopWords(textTagRegexResultClear)
 
         # Add legal elements to result dictionary
         results[docno] = text
