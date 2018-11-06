@@ -26,6 +26,8 @@ def RegexParseTrecFile(pathtofile):
     # Find all documents in file, including subtags. 
     documents = re.findall("<DOC>[\s\S]*?<\/DOC>", trecFileString)
 
+    # TODO: Check if necessary find tags as case-INsensetive,
+    #       if its needed use: re.findall(pattern, string, re.I)
     # Iterate through each DOC and cut only DOCNO and TEXT tags
     for doc in documents:
         # Regex Pattern to find content between <DOC></DOC>
