@@ -51,7 +51,7 @@ def RegexParseTrecFile(pathtofile):
         # Remove end of lines and tabs from string
         textTagRegexResultClear = textTagRegexResultString.replace('\n', ' ').replace('\r', '')
 
-        # Remove all Stop Words from text
+        # Remove all Stop Words from text, returns Set of strings
         text = FilterStopWords(textTagRegexResultClear)
 
         # Add legal elements to result dictionary
