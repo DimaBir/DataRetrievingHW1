@@ -5,13 +5,13 @@ from ManualTrecFileParser import RegexParseTrecFile
 from enum import Enum
 
 
-def progressBar(now, max):
-    percent = "{0:.1f}".format(100 * (now / float(max)))
-    done_part = int(50 * now // max)
-    bar = '#' * done_part + '-' * (100 - done_part)
-    print('\rCompleted |{}| {}% of documents'.format(bar, percent))
-    if now == max:
-        print()
+def progress_bar(progress):
+    if isinstance(progress, int):
+        progress = float(progress)
+    block = int(round(20*progress))
+    text = "\rCompleted: [{0}] {1}% of documents.".format("#"*block + "-"*(20-block), progress*100)
+    sys.stdout.write(text)
+    sys.stdout.flush()
 
 
 class DoubleListNode(object):
@@ -158,7 +158,7 @@ def InvertedIndex():
     num = 1
     for trec_file in trec_files:
         trec_dict = RegexParseTrecFile(path + trec_file)
-        progressBar(num, num_files)
+        progress_bar(num / num_files)
         for docno, text in trec_dict.items():
             internal_index = len(index_object.docno_dict)
             index_object.docno_dict.append(docno)
