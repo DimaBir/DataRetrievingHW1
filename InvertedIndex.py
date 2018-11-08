@@ -7,9 +7,9 @@ from enum import Enum
 
 def progressBar(now, max):
     percent = "{0:.1f}".format(100 * (now / float(max)))
-    done_part = int(100 * now // max)
+    done_part = int(50 * now // max)
     bar = '#' * done_part + '-' * (100 - done_part)
-    print('\rCompleted |{}| {}% of documents\r'.format(bar, percent))
+    print('\rCompleted |{}| {}% of documents'.format(bar, percent))
     if now == max:
         print()
 
