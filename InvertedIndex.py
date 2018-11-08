@@ -3,13 +3,13 @@ from os.path import isfile, join
 import pickle
 from ManualTrecFileParser import RegexParseTrecFile
 from enum import Enum
+import sys
 
-
-def progress_bar(progress):
+def progress_bar(progress, doc):
     if isinstance(progress, int):
         progress = float(progress)
     block = int(round(20*progress))
-    text = "\rCompleted: [{0}] {1}% of documents.".format("#"*block + "-"*(20-block), progress*100)
+    text = "\rCompleted: [{0}] {1:5.2f}% of documents: {2}".format("#"*block + "-"*(20-block), progress*100, doc)
     sys.stdout.write(text)
     sys.stdout.flush()
 
@@ -157,8 +157,8 @@ def InvertedIndex():
     num_files = len(trec_files)
     num = 1
     for trec_file in trec_files:
+        progress_bar(num / num_files, trec_file)
         trec_dict = RegexParseTrecFile(path + trec_file)
-        progress_bar(num / num_files)
         for docno, text in trec_dict.items():
             internal_index = len(index_object.docno_dict)
             index_object.docno_dict.append(docno)
