@@ -5,6 +5,15 @@ from ManualTrecFileParser import RegexParseTrecFile
 from enum import Enum
 
 
+def progressBar(now, max):
+    percent = "{0:.1f}".format(100 * (now / float(max)))
+    done_part = int(100 * now // max)
+    bar = '#' * done_part + '-' * (100 - done_part)
+    print('\rCompleted |{}| {}% of documents\r'.format(bar, percent))
+    if now == max:
+        print()
+
+
 class DoubleListNode(object):
     def __init__(self, data, prev, next):
         self.data = data
@@ -145,8 +154,11 @@ def InvertedIndex():
     index_object = inverted_index()
     path = r"/data/HW1/AP_Coll_Parsed/"
     trec_files = [f for f in listdir(path) if isfile(join(path, f))]
+    num_files = len(trec_files)
+    num = 1
     for trec_file in trec_files:
         trec_dict = RegexParseTrecFile(path + trec_file)
+        progressBar(num, num_files)
         for docno, text in trec_dict.items():
             internal_index = len(index_object.docno_dict)
             index_object.docno_dict.append(docno)
@@ -154,6 +166,7 @@ def InvertedIndex():
                 if word not in index_object.index:
                     index_object.index[word] = DoubleList()
                 index_object.index[word].append(internal_index)
+        num += 1
     with open('/home/student/HW1/index', 'wb') as f:
         pickle.dump(index_object.index, f)
     with open('/home/student/HW1/index_dict', 'wb') as f:
