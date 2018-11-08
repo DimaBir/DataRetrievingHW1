@@ -1,7 +1,7 @@
 from os import listdir
 from os.path import isfile, join
 import pickle
-from TrecFileParser import parsetrecfile
+from ManualTrecFileParser import RegexParseTrecFile
 from enum import Enum
 
 
@@ -141,13 +141,12 @@ class inverted_index(object):
         return retval
 
 
-
 def InvertedIndex():
     index_object = inverted_index()
     path = r"/data/HW1/AP_Coll_Parsed/"
     trec_files = [f for f in listdir(path) if isfile(join(path, f))]
     for trec_file in trec_files:
-        trec_dict = parsetrecfile(path + trec_file)
+        trec_dict = RegexParseTrecFile(path + trec_file)
         for docno, text in trec_dict.items():
             internal_index = len(index_object.docno_dict)
             index_object.docno_dict.append(docno)
