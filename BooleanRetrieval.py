@@ -22,8 +22,8 @@ class TreeNode(object):
         if self.type == TreeNodeType.DATA:
             return index_object.index[query.data]
         retval = []
-        left_ret = index_object.eval(self.left)
-        right_ret = index_object.eval(self.right)
+        left_ret = left.eval(index_object)
+        right_ret = right.eval(index_object)
         i = j = 0
         if self.type == TreeNodeType.AND:
             while i < len(left_ret) and j < len(right_ret):
