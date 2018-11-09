@@ -27,9 +27,7 @@ def writeToFile(str, path):
 #   - output_dir: path to directory where output files will be saved
 def createStatstics(output_dir):
     indexFile = shelve.open(output_dir + 'index')
-    dic = {'a': 1050, 'b': 1050, 'c': 1050, 'd': 1050, 'e': 1050, 'f': 1050, 'g': 1050, 'h': 1050, 'i': 1050, 'k': 1050, 'l': 1050,
-     'm': 1050, 'n': 1050, 'o': 1050, 'vietnamese': 830, 'dog': 730, 'cat': 630}
-    (minHeap, maxHeap) = HeapUtils.createHeaps(dic)
+    (minHeap, maxHeap) = HeapUtils.createHeaps(indexFile)
 
     topTenMostFrequentWords = DictionaryUtils.getNLargest(10, maxHeap)
     topTenLeastFrequentWords = DictionaryUtils.getNSmallest(10, minHeap)

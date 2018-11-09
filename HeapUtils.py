@@ -8,8 +8,8 @@ def createHeaps(dictionary):
     minHeap = MinHeap()
     maxHeap = MaxHeap()
     for key, value in dictionary.items():
-        maxHeap.pushMaxHeap((key, value))
-        minHeap.pushMinHeap((key, value))
+        maxHeap.pushMaxHeap((key, len(value)))
+        minHeap.pushMinHeap((key, len(value)))
 
     return minHeap, maxHeap
 
