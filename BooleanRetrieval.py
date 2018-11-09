@@ -1,7 +1,7 @@
 from os import listdir
 from os.path import isfile, join
 import pickle
-from InvertedIndex import TreeNodeType, TreeNode, inverted_index, DoubleListNode, DoubleList
+from InvertedIndex import TreeNodeType, TreeNode, inverted_index
 
 
 def string_parentheses_parse(string):
@@ -60,30 +60,27 @@ def make_query(string):
     return make_query_aux(list_res)
 
 
-def BooleanRetrieval():
-    index_object = inverted_index()
-    with open('/home/student/HW1/index', 'rb') as f:
-        index_object.index = pickle.load(f)
-    with open('/home/student/HW1/index_dict', 'rb') as f:
+def BooleanRetrieval(input_dir, output_dir):
+    index_object = inverted_index(output_dir + 'index')
+    with open(output_dir +'index_dict', 'rb') as f:
         index_object.docno_dict = pickle.load(f)
-    with open('/data/HW1/BooleanQueries.txt', 'rb') as q:
-        with open('/home/student/HW1/Part_2.txt') as f:
+    with open(input_dir + 'BooleanQueries.txt', 'rb') as q:
+        with open(output_dir + 'Part_2.txt', 'wb') as f:
             queries = q.readlines()
             for query_string in queries:
                 query_string_clean = query_string.strip().decode('ASCII')
                 query_tree = make_query(query_string_clean)
                 reslist = index_object.eval(query_tree)
-                reslist.init_iterator()
-                reslist_it = reslist.get_next()
                 sstr = ""
-                while reslist_it is not None:
-                    sstr += str(index_object.docno_dict[reslist_it.data]) + " "
-                    reslist_it = reslist.get_next()
+                for x in reslist:
+                    sstr += str(index_object.docno_dict[x]) + " "
                 if sstr.endswith(" "):
                     sstr = sstr[:-1]
-                sstr += "\n"
+                sstr += "\r\n"
                 f.write(sstr.encode('ASCII'))
 
 
 if __name__ == "__main__":
-    BooleanRetrieval()
+    input_dir = r"/data/HW1/"
+    output_dir = r'/home/student/HW1/'
+    BooleanRetrieval(input_dir, output_dir)

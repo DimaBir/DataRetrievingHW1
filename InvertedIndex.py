@@ -4,6 +4,8 @@ import pickle
 from ManualTrecFileParser import RegexParseTrecFile
 from enum import Enum
 import sys
+import shelve
+
 
 def progress_bar(progress, doc):
     if isinstance(progress, int):
@@ -12,68 +14,6 @@ def progress_bar(progress, doc):
     text = "\rCompleted: [{0}] {1:5.2f}% of documents: {2}".format("#"*block + "-"*(20-block), progress*100, doc)
     sys.stdout.write(text)
     sys.stdout.flush()
-
-
-class DoubleListNode(object):
-    def __init__(self, data, prev, next):
-        self.data = data
-        self.prev = prev
-        self.next = next
-
-
-class DoubleList(object):
-    head = None
-    tail = None
-    iterator = None
-
-    def append(self, data):
-        new_node = DoubleListNode(data, None, None)
-        if self.head is None:
-            self.head = self.tail = new_node
-        else:
-            new_node.prev = self.tail
-            new_node.next = None
-            self.tail.next = new_node
-            self.tail = new_node
-
-    def init_iterator(self):
-        self.iterator = self.head
-
-    def init_reverse_iterator(self):
-        self.iterator = self.tail
-
-    def get_next(self):
-        if self.iterator is None:
-            return None
-        retval = self.iterator
-        self.iterator = self.iterator.next
-        return retval
-
-    def get_prev(self):
-        if self.iterator is None:
-            return None
-        retval = self.iterator
-        self.iterator = self.iterator.prev
-        return retval
-
-    def get_last(self):
-        return self.tail
-
-    def remove(self, node_value):
-        current_node = self.head
-
-        while current_node is not None:
-            if current_node.data == node_value:
-                # if it's not the first element
-                if current_node.prev is not None:
-                    current_node.prev.next = current_node.next
-                    current_node.next.prev = current_node.prev
-                else:
-                    # otherwise we have no prev (it's None), head is the next one, and prev becomes None
-                    self.head = current_node.next
-                    current_node.next.prev = None
-
-            current_node = current_node.next
 
 
 class TreeNodeType(Enum):
@@ -92,67 +32,53 @@ class TreeNode(object):
 
 
 class inverted_index(object):
-    def __init__(self):
-        self.index = {}
+    def __init__(self, ind_file):
+        self.index = shelve.open(ind_file, writeback=True)
         self.docno_dict = []
 
     def eval(self, query):
         if query.type == TreeNodeType.DATA:
             return self.index[query.data]
-        retval = DoubleList()
+        retval = []
+        left = self.eval(query.left)
+        right = self.eval(query.right)
+        i = j = 0
         if query.type == TreeNodeType.AND:
-            left = self.eval(query.left)
-            right = self.eval(query.right)
-            left.init_iterator()
-            right.init_iterator()
-            left_it = left.get_next()
-            right_it = right.get_next()
-            while left_it is not None and right_it is not None:
-                if left_it.data == right_it.data:
-                    retval.append(left_it.data)
-                    left_it = left.get_next()
-                    right_it = right.get_next()
-                if left_it.data < right_it.data:
-                    left_it = left.get_next()
+            while i < len(left) and j < len(right):
+                if left[i] == right[j]:
+                    retval.append(left[i])
+                    i += 1
+                    j += 1
+                if left[i] < right[j]:
+                    i += 1
                 else:
-                    right_it = right.get_next()
+                    j += 1
         if query.type == TreeNodeType.OR:
-            left = self.eval(query.left)
-            right = self.eval(query.right)
-            left.init_iterator()
-            right.init_iterator()
-            left_it = left.get_next()
-            right_it = right.get_next()
-            while left_it is not None or right_it is not None:
-                if right_it is None or left_it.data < right_it.data:
-                    retval.append(left_it.data)
-                    left_it = left.get_next()
-                if left_it is None or left_it.data > right_it.data:
-                    retval.append(right_it.data)
-                    right_it = right.get_next()
+            while i < len(left) or j < len(right):
+                if j >= len(right) or left[i] < right[j]:
+                    retval.append(left[i])
+                    i += 1
+                if i >= len(left) or left[i] > right[j]:
+                    retval.append(right[j])
+                    j += 1
                 else:
-                    retval.append(left_it.data)
-                    left_it = left.get_next()
-                    right_it = right.get_next()
+                    retval.append(left[i])
+                    i += 1
+                    j += 1
         if query.type == TreeNodeType.NOT:
-            left = self.eval(query.left)
-            right = self.eval(query.right)
-            left.init_iterator()
-            right.init_iterator()
-            left_it = left.get_next()
-            right_it = right.get_next()
-            while left_it is not None:
-                while right_it is not None and right_it.data < left_it.data:
-                    right_it = right.get_next()
-                if right_it is not None and right_it.data > left_it.data:
-                    retval.append(left_it.data)
-                left_it = left.get_next()
+            while i < len(left):
+                while j < len(right) and right[j] < left[i]:
+                    j += 1
+                if j < len(right) and right[j] > left[i]:
+                    retval.append(left[i])
+                i += 1
         return retval
 
 
-def InvertedIndex():
-    index_object = inverted_index()
-    path = r"/data/HW1/AP_Coll_Parsed/"
+def InvertedIndex(input_dir, output_dir):
+    index_object = inverted_index(output_dir + 'index')
+    index_object.index.clear()
+    path = input_dir
     trec_files = [f for f in listdir(path) if isfile(join(path, f))]
     num_files = len(trec_files)
     num = 1
@@ -161,17 +87,22 @@ def InvertedIndex():
         trec_dict = RegexParseTrecFile(path + trec_file)
         for docno, text in trec_dict.items():
             internal_index = len(index_object.docno_dict)
-            index_object.docno_dict.append(docno)
+            index_object.docno_dict.append(docno.strip())
             for word in text:
                 if word not in index_object.index:
-                    index_object.index[word] = DoubleList()
-                index_object.index[word].append(internal_index)
+                    index_object.index[word] = [internal_index]
+                else:
+                    index_object.index[word].append(internal_index)
+        if num % 500 == 0:
+            index_object.index.sync()
         num += 1
-    with open('/home/student/HW1/index', 'wb') as f:
-        pickle.dump(index_object.index, f)
-    with open('/home/student/HW1/index_dict', 'wb') as f:
+    print(index_object.index['kuku'])
+    index_object.index.close()
+    with open(output_dir + 'index_dict', 'wb') as f:
         pickle.dump(index_object.docno_dict, f)
 
 
 if __name__ == "__main__":
-    InvertedIndex()
+    input_dir = r"/data/HW1/AP_Coll_Parsed/"
+    output_dir = r'/home/student/HW1/'
+    InvertedIndex(input_dir, output_dir)
