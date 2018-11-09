@@ -8,8 +8,8 @@ def createHeaps(dictionary):
     minHeap = MinHeap()
     maxHeap = MaxHeap()
     for key, value in dictionary.items():
-        maxHeap.pushMaxHeap((key, len(value)))
-        minHeap.pushMinHeap((key, len(value)))
+        maxHeap.pushMaxHeap((key, value))
+        minHeap.pushMinHeap((key, value))
 
     return minHeap, maxHeap
 
@@ -38,7 +38,7 @@ class MinHeap(Heap):
         # If heap already have at least 10 elements compare with min, if greater push current
         if len(self.heap) >= 10:
             minElement = self.popMinHeap()
-            if minElement[1] > item[1]:
+            if minElement[1] <= item[1]:
                 item = (minElement[0], minElement[1])
         heapq.heappush(self.heap, item)
         return
@@ -47,7 +47,7 @@ class MinHeap(Heap):
         return heapq.heappop(self.heap)
 
 
-# Inherit from Heap Class, implements Minimum Heap Object
+# Inherit from Heap Class, implements Maximum Heap Object
 class MaxHeap(Heap):
     def __init__(self):
         super().__init__()
@@ -60,9 +60,10 @@ class MaxHeap(Heap):
         if len(self.heap) >= 10:
             # Get Max Element in Heap
             maxElement = self.popMaxHeap()
-            # If max element of heap is lower then current item we will leave it
-            if maxElement[1] <= item[1]:
-                item = (maxElement[0], maxElement[1])
+            # If max element of heap is lower then current item (or grater in the positive context) we will leave it
+            if -maxElement[1] <= item[1]:
+                # Push max element back into heap
+                item = (maxElement[0], -maxElement[1])
         heapq.heappush(self.heap, (item[0], item[1]))
         return
 
