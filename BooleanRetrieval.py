@@ -1,6 +1,6 @@
 import pickle
 from InvertedIndex import inverted_index, progress_bar
-
+from enum import Enum
 
 class TreeNodeType(Enum):
     AND = 1
@@ -25,15 +25,15 @@ class TreeNode(object):
             list of document indexes from inverted index that comply with the query.
         """
         if self.type == TreeNodeType.DATA:
-            return index_object.index[query.data]
+            return index_object.index[self.data]
         retval = []
-        left_ret = left.eval(index_object)
-        right_ret = right.eval(index_object)
+        left_ret = self.left.eval(index_object)
+        right_ret = self.right.eval(index_object)
         i = j = 0
         if self.type == TreeNodeType.AND:
             while i < len(left_ret) and j < len(right_ret):
                 if left_ret[i] == right_ret[j]:
-                    retval.append(left[i])
+                    retval.append(left_ret[i])
                     i += 1
                     j += 1
                 elif left_ret[i] < right_ret[j]:
@@ -43,7 +43,7 @@ class TreeNode(object):
         if self.type == TreeNodeType.OR:
             while i < len(left_ret) or j < len(right_ret):
                 if j >= len(right_ret) or (i < len(left_ret) and left_ret[i] < right_ret[j]):
-                    retval.append(left[i])
+                    retval.append(left_ret[i])
                     i += 1
                 elif i >= len(left_ret) or (j < len(right_ret) and left_ret[i] > right_ret[j]):
                     retval.append(right_ret[j])
