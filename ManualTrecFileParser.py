@@ -1,18 +1,14 @@
-from StopWordsFilter import FilterStopWords
 import re
+from StopWordsFilter import FilterStopWords
 
-
-def printDictionary(dictionary):
-    for key in dictionary:
-        print("DOCNO :", key, "\nTEXT =", dictionary[key], "\n")
 
 # Parses trec file, using regex expressions
 # params:
-# - pathtofile: path to trec file 
+#   - pathtofile: path to trec file
 # return: 
-# - Dictionary: Key=DOCNO, Value=TEXT 
+#   - Dictionary: Key=DOCNO, Value=TEXT
 # Value as Set of splitted strings from <TEXT><\TEXT> without stop words
-def RegexParseTrecFile(pathtofile):
+def RegexParseTrecFile(pathtofile, clearStopWords=False):
     # Reading file
     with open(pathtofile, 'r') as f:
         trecFileString = f.read()
@@ -53,15 +49,12 @@ def RegexParseTrecFile(pathtofile):
         # Remove end of lines and tabs from string
         textTagRegexResultClear = textTagRegexResultString.replace('\n', ' ').replace('\r', '')
 
-        # Remove all Stop Words from text, returns Set of strings
-        text = FilterStopWords(textTagRegexResultClear)
+        # Remove all Stop Words from text, returns Set of strings (if necessary)
+        if(clearStopWords):
+            results[docno] = FilterStopWords(textTagRegexResultClear)
+            continue
 
         # Add legal elements to result dictionary
-        results[docno] = text
+        results[docno] = set(textTagRegexResultClear.split())
 
     return results
-
-
-# TODO: remove on release
-# Print dictionary keys and values example
-# printDictionary(RegexParseTrecFile('test.txt'))
