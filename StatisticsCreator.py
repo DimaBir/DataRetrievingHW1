@@ -5,7 +5,7 @@ from InvertedIndex import InvertedIndex
 
 # Transforms lists elements to strings are separated by commas
 # params: - list: list that will be transformed to strings
-# returns: - str - string with elements separated by commas
+# returns: - str - string with elementשורs separated by commas
 def formatListToStr(list):
     string = ""
     for i in list[:-1]:
@@ -27,7 +27,6 @@ def writeToFile(str, path):
 #   - input_dir : path to directory where documents are
 #   - output_dir: path to directory where output files will be saved
 def createStatstics(input_dir, output_dir):
-    InvertedIndex(input_dir, output_dir)
     indexFile = shelve.open(output_dir + 'index')
     topTenMostFrequentWords = DictionaryUtils.getNLargest(10, DictionaryUtils.transformListToLength(indexFile))
     topTenLeastFrequentWords = DictionaryUtils.getNSmallest(10, DictionaryUtils.transformListToLength(indexFile))
