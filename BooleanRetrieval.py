@@ -1,5 +1,5 @@
 import pickle
-from InvertedIndex import inverted_index
+from InvertedIndex import inverted_index, progress_bar
 
 
 class TreeNodeType(Enum):
@@ -118,7 +118,12 @@ def BooleanRetrieval(input_dir, output_dir):
     with open(input_dir + 'BooleanQueries.txt', 'rb') as q:
         with open(output_dir + 'Part_2.txt', 'wb') as f:
             queries = q.readlines()
+            q_num = len(queries)
+            num = 1
+            print("Running {} queries".format(q_num))
+            progress_bar(0, "of queries")
             for query_string in queries:
+                p = num / q_num
                 query_string_clean = query_string.strip().decode('ASCII')
                 query_tree = make_query(query_string_clean)
                 reslist = query_tree.eval(index_object)
@@ -129,6 +134,9 @@ def BooleanRetrieval(input_dir, output_dir):
                     sstr = sstr[:-1]
                 sstr += "\n"
                 f.write(sstr.encode('ASCII'))
+                progress_bar(p, "of queries")
+                num += 1
+    print("\nFinished running queries. results file: {}".format(output_dir + "Part_2.txt"))
 
 
 if __name__ == "__main__":
