@@ -76,7 +76,7 @@ def BooleanRetrieval(input_dir, output_dir):
                     sstr += str(index_object.docno_dict[x]) + " "
                 if sstr.endswith(" "):
                     sstr = sstr[:-1]
-                sstr += "\r\n"
+                sstr += "\n"
                 f.write(sstr.encode('ASCII'))
 
 
