@@ -49,16 +49,16 @@ class inverted_index(object):
                     retval.append(left[i])
                     i += 1
                     j += 1
-                if left[i] < right[j]:
+                elif left[i] < right[j]:
                     i += 1
                 else:
                     j += 1
         if query.type == TreeNodeType.OR:
             while i < len(left) or j < len(right):
-                if j >= len(right) or left[i] < right[j]:
+                if j >= len(right) or (i < len(left) and left[i] < right[j]):
                     retval.append(left[i])
                     i += 1
-                if i >= len(left) or left[i] > right[j]:
+                elif i >= len(left) or (j < len(right) and left[i] > right[j]):
                     retval.append(right[j])
                     j += 1
                 else:
