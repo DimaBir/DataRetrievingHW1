@@ -16,63 +16,10 @@ def progress_bar(progress):
     sys.stdout.flush()
 
 
-class TreeNodeType(Enum):
-    AND = 1
-    OR = 2
-    NOT = 3
-    DATA = 4
-
-
-class TreeNode(object):
-    def __init__(self, type, data = None, left = None, right = None):
-        self.type = type
-        self.data = data
-        self.left = left
-        self.right = right
-
-
 class inverted_index(object):
     def __init__(self, ind_file):
         self.index = shelve.open(ind_file, writeback=True)
         self.docno_dict = []
-
-    def eval(self, query):
-        if query.type == TreeNodeType.DATA:
-            return self.index[query.data]
-        retval = []
-        left = self.eval(query.left)
-        right = self.eval(query.right)
-        i = j = 0
-        if query.type == TreeNodeType.AND:
-            while i < len(left) and j < len(right):
-                if left[i] == right[j]:
-                    retval.append(left[i])
-                    i += 1
-                    j += 1
-                elif left[i] < right[j]:
-                    i += 1
-                else:
-                    j += 1
-        if query.type == TreeNodeType.OR:
-            while i < len(left) or j < len(right):
-                if j >= len(right) or (i < len(left) and left[i] < right[j]):
-                    retval.append(left[i])
-                    i += 1
-                elif i >= len(left) or (j < len(right) and left[i] > right[j]):
-                    retval.append(right[j])
-                    j += 1
-                else:
-                    retval.append(left[i])
-                    i += 1
-                    j += 1
-        if query.type == TreeNodeType.NOT:
-            while i < len(left):
-                while j < len(right) and right[j] < left[i]:
-                    j += 1
-                if j < len(right) and right[j] > left[i]:
-                    retval.append(left[i])
-                i += 1
-        return retval
 
 
 def InvertedIndex(input_dir, output_dir):

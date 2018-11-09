@@ -1,7 +1,60 @@
 from os import listdir
 from os.path import isfile, join
 import pickle
-from InvertedIndex import TreeNodeType, TreeNode, inverted_index
+from InvertedIndex import inverted_index
+
+
+class TreeNodeType(Enum):
+    AND = 1
+    OR = 2
+    NOT = 3
+    DATA = 4
+
+
+class TreeNode(object):
+    def __init__(self, type, data=None, left=None, right=None):
+        self.type = type
+        self.data = data
+        self.left = left
+        self.right = right
+
+    def eval(self, index_object):
+        if self.type == TreeNodeType.DATA:
+            return index_object.index[query.data]
+        retval = []
+        left_ret = index_object.eval(self.left)
+        right_ret = index_object.eval(self.right)
+        i = j = 0
+        if self.type == TreeNodeType.AND:
+            while i < len(left_ret) and j < len(right_ret):
+                if left_ret[i] == right_ret[j]:
+                    retval.append(left[i])
+                    i += 1
+                    j += 1
+                elif left_ret[i] < right_ret[j]:
+                    i += 1
+                else:
+                    j += 1
+        if self.type == TreeNodeType.OR:
+            while i < len(left_ret) or j < len(right_ret):
+                if j >= len(right_ret) or (i < len(left_ret) and left_ret[i] < right_ret[j]):
+                    retval.append(left[i])
+                    i += 1
+                elif i >= len(left_ret) or (j < len(right_ret) and left_ret[i] > right_ret[j]):
+                    retval.append(right_ret[j])
+                    j += 1
+                else:
+                    retval.append(left_ret[i])
+                    i += 1
+                    j += 1
+        if self.type == TreeNodeType.NOT:
+            while i < len(left_ret):
+                while j < len(right_ret) and right_ret[j] < left_ret[i]:
+                    j += 1
+                if j < len(right_ret) and right_ret[j] > left_ret[i]:
+                    retval.append(left_ret[i])
+                i += 1
+        return retval
 
 
 def string_parentheses_parse(string):
@@ -70,7 +123,7 @@ def BooleanRetrieval(input_dir, output_dir):
             for query_string in queries:
                 query_string_clean = query_string.strip().decode('ASCII')
                 query_tree = make_query(query_string_clean)
-                reslist = index_object.eval(query_tree)
+                reslist = query_tree.eval(index_object)
                 sstr = ""
                 for x in reslist:
                     sstr += str(index_object.docno_dict[x]) + " "
