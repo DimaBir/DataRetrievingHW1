@@ -42,7 +42,7 @@ def createStatstics(output_dir):
                        " hand, Least frequent words are regular words, and dependent on the subject, so they are" +\
                        " exists in specific documents that describes that subject"
 
-    writeToFile(finalFileContent, output_dir + 'Part3.txt')
+    writeToFile(finalFileContent, output_dir + 'Part_3.txt')
 
 
 if __name__ == "__main__":
