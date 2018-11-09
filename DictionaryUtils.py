@@ -1,4 +1,3 @@
-import heapq
 from operator import itemgetter
 
 
@@ -19,16 +18,6 @@ def sortDictionary(result, reverseFlag=True):
     return resultSorted
 
 
-# Upates dictionary value from posting list to its length
-# Params: result: dictionary to modify
-# retiurns: dictionary of key value pairs, where key is word and value is document frequency
-def transformListToLength(dictionary):
-    result = {}
-    for key, value in dictionary.items():
-        result[key] = len(value)
-    return result
-
-
 # Extracts n keys from dictionary
 # params:
 #   - dictionary to extract from
@@ -46,9 +35,9 @@ def extractKeysToList(n, dictionary):
 # Params:
 #        - n : amount of top elements to be returned. if n > |dictonary| will be returned all keys
 #        - dictionary: dictionary to work in
-# returns: list of words
-def getNLargest(n, dictionary):
-    sortedWords = {key: value for key, value in dictionary.items() if value in heapq.nlargest(n, dictionary.values())}
+# returns: return min Heap
+def getNLargest(n, minHeap):
+    sortedWords = minHeap.items()
     return extractKeysToList(n, sortedWords)
 
 
@@ -56,8 +45,8 @@ def getNLargest(n, dictionary):
 # Params:
 #        - n : amount of top elements to be returned. if n > |dictonary| will be returned all keys
 #        - dictionary: dictionary to work in
-# returns: list of words
-def getNSmallest(n, dictionary):
-    sortedWords = {key: value for key, value in dictionary.items() if value in heapq.nsmallest(n, dictionary.values())}
+# returns: max Heap
+def getNSmallest(n, maxHeap):
+    sortedWords = maxHeap.items()
     return extractKeysToList(n, sortedWords)
 

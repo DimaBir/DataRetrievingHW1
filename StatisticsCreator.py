@@ -1,6 +1,6 @@
 import shelve
 import DictionaryUtils
-from InvertedIndex import InvertedIndex
+import HeapUtils
 
 
 # Transforms lists elements to strings are separated by commas
@@ -24,12 +24,13 @@ def writeToFile(str, path):
 
 # Creates statistics about most and least frequents words in documents
 # params:
-#   - input_dir : path to directory where documents are
 #   - output_dir: path to directory where output files will be saved
-def createStatstics(input_dir, output_dir):
+def createStatstics(output_dir):
     indexFile = shelve.open(output_dir + 'index')
-    topTenMostFrequentWords = DictionaryUtils.getNLargest(10, DictionaryUtils.transformListToLength(indexFile))
-    topTenLeastFrequentWords = DictionaryUtils.getNSmallest(10, DictionaryUtils.transformListToLength(indexFile))
+    (minHeap, maxHeap) = HeapUtils.createHeaps(indexFile)
+
+    topTenMostFrequentWords = DictionaryUtils.getNLargest(10, minHeap)
+    topTenLeastFrequentWords = DictionaryUtils.getNSmallest(10, maxHeap)
 
     topTenMostFrequentWordsAsString  = formatListToStr(topTenMostFrequentWords)
     topTenLeastFrequentWordsAsString  = formatListToStr(topTenLeastFrequentWords)
@@ -45,6 +46,5 @@ def createStatstics(input_dir, output_dir):
 
 
 if __name__ == "__main__":
-    input_dir = r"/data/HW1/AP_Coll_Parsed/"
-    output_dir = r'/home/student/HW1/'
-    createStatstics(input_dir, output_dir)
+    output_dir = r''
+    createStatstics(output_dir)
