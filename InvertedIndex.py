@@ -8,6 +8,13 @@ import shelve
 
 
 def progress_bar(progress, text):
+    """
+    Prints progress bar to console
+    Args:
+        progress: float in [0,1] representing progress in action
+                    where 0 nothing done and 1 completed.
+        text: Short string to add after progress bar.
+    """
     if isinstance(progress, int):
         progress = float(progress)
     block = int(round(20*progress))
@@ -23,6 +30,13 @@ class inverted_index(object):
 
 
 def InvertedIndex(input_dir, output_dir):
+    """
+    Builds inverted index of all documents in all TREC files in input directory
+    inverted index is stored in python shelve in the output directory.
+    Args:
+        input_dir: Input directory, containing TREC files
+        output_dir: Output directory
+    """
     index_object = inverted_index(output_dir + 'index')
     index_object.index.clear()
     index_object.index.sync()

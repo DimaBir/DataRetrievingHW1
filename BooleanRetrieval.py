@@ -17,6 +17,13 @@ class TreeNode(object):
         self.right = right
 
     def eval(self, index_object):
+        """
+        Evaluates the Query Tree (where self is root) according to inverted index
+        Args:
+            index_object: contains shelf inverted index and list of DOCNOs for translation.
+        Returns:
+            list of document indexes from inverted index that comply with the query.
+        """
         if self.type == TreeNodeType.DATA:
             return index_object.index[query.data]
         retval = []
@@ -56,6 +63,14 @@ class TreeNode(object):
 
 
 def string_parentheses_parse(string):
+    """
+    Processes query string to determine operator precedence according to parentheses.
+    Args:
+        string: Query string consisting of terms, parentheses and logical operators
+
+    Returns: nested lists, where each list represents a unit closed within parentheses
+            in the query
+    """
     retval = []
     first = string.find("(")
     beginning = 0
@@ -107,11 +122,27 @@ def make_query_aux(lres):
 
 
 def make_query(string):
+    """
+    Constructs quetry tree from string
+    Args:
+        string: Query string as given by user
+
+    Returns:
+        Root tree node of query tree.
+
+    """
     list_res = string_parentheses_parse(string)
     return make_query_aux(list_res)
 
 
 def BooleanRetrieval(input_dir, output_dir):
+    """
+    Retrieves list of documents for each query in the query text file.
+    Results are written line by line in Part_2.txt in output directory
+    Args:
+        input_dir: Input directory containing the query text file
+        output_dir: Output directory
+    """
     index_object = inverted_index(output_dir + 'index')
     with open(output_dir +'index_dict', 'rb') as f:
         index_object.docno_dict = pickle.load(f)
