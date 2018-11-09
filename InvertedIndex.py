@@ -93,10 +93,9 @@ def InvertedIndex(input_dir, output_dir):
                     index_object.index[word] = [internal_index]
                 else:
                     index_object.index[word].append(internal_index)
-        if num % 500 == 0:
+        if num % 200 == 0:
             index_object.index.sync()
         num += 1
-    print(index_object.index['kuku'])
     index_object.index.close()
     with open(output_dir + 'index_dict', 'wb') as f:
         pickle.dump(index_object.docno_dict, f)
