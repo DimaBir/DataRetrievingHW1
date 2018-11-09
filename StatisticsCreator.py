@@ -46,5 +46,5 @@ def createStatstics(output_dir):
 
 
 if __name__ == "__main__":
-    output_dir = r''
+    output_dir = r'/home/student/HW1/'
     createStatstics(output_dir)
