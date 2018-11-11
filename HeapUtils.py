@@ -40,6 +40,7 @@ class MinHeap(Heap):
             minElement = self.popMinHeap()
             if minElement[1] >= item[1]:
                 item = (minElement[0], minElement[1])
+        # TODO: try insert (value, key) pair to heap, since heap sort items by first value
         heapq.heappush(self.heap, item)
         return
 
@@ -64,6 +65,7 @@ class MaxHeap(Heap):
             if -maxElement[1] >= item[1]:
                 # Push max element back into heap
                 item = (maxElement[0], -maxElement[1])
+        # TODO: try insert (value, key) pair to heap, since heap sort items by first value
         heapq.heappush(self.heap, (item[0], item[1]))
         return
 
