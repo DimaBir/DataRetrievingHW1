@@ -23,7 +23,8 @@ class Heap(object):
         items = {}
         i = 0
         while i < len(self.heap):
-            items[self.heap[i][0]] = self.heap[i][1]
+            # swap back to (key, value) pair
+            items[self.heap[i][1]] = self.heap[i][0]
             i += 1
         return items
 
@@ -40,8 +41,8 @@ class MinHeap(Heap):
             minElement = self.popMinHeap()
             if minElement[1] >= item[1]:
                 item = (minElement[0], minElement[1])
-        # TODO: try insert (value, key) pair to heap, since heap sort items by first value
-        heapq.heappush(self.heap, item)
+        # inserting (value, key) pair to heap, since heap sort items by first value
+        heapq.heappush(self.heap, (item[1], item[0]))
         return
 
     def popMinHeap(self):
@@ -65,8 +66,8 @@ class MaxHeap(Heap):
             if -maxElement[1] >= item[1]:
                 # Push max element back into heap
                 item = (maxElement[0], -maxElement[1])
-        # TODO: try insert (value, key) pair to heap, since heap sort items by first value
-        heapq.heappush(self.heap, (item[0], item[1]))
+        # inserting (value, key) pair to heap, since heap sort items by first value
+        heapq.heappush(self.heap, (item[1], item[0]))
         return
 
     def popMaxHeap(self):
