@@ -1,3 +1,8 @@
 1) Top 10 most common terms: the, of, in, a, and, to, for, said, on, that
-2) Top 10 least common terms: 283031, australiavietnam, radelats, metveit, detered, wettre, rathebe, toralf, weekwas, nspca
-3) Top 10 most frequent words are includes some 'Stop Words', as we know, from Zipf Law, that we learned in the class, Stop Words are most frequent words in English language.In other hand, Least frequent words are regular words, and dependent on the subject, so they are exists in specific documents that describes that subject
+2) Top 10 least common terms: 283031, australiavietnam, radelats, nspca, detered, wettre, rathebe, weekwas, toralf, metveit
+3) Top 10 most frequent words include some 'Stop Words', as we know, from Zipf Law, that
+    we learned in class, Stop Words are the most frequent words in English language.
+    These common words are expected in most if not all documents.
+    On the other hand, the least frequent words include mostly typos and other mistakes,
+    and precise numeric terms that are context specific or unique mistakes that are
+    not expected to repeat themselves.

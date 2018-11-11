@@ -5,7 +5,7 @@ import HeapUtils
 
 # Transforms lists elements to strings are separated by commas
 # params: - list: list that will be transformed to strings
-# returns: - str - string with elementשורs separated by commas
+# returns: - str - string with elements separated by commas
 def formatListToStr(list):
     string = ""
     for i in list[:-1]:
@@ -36,12 +36,12 @@ def createStatstics(output_dir):
 
     finalFileContent = "1) Top 10 most common terms: " + topTenMostFrequentWordsAsString + "\n" +\
                        "2) Top 10 least common terms: " + topTenLeastFrequentWordsAsString + "\n" +\
-                       "3) Top 10 most frequent words include some 'Stop Words', as we know, from Zipf Law, that"+\
-                       " we learned in class, Stop Words are the most frequent words in English language." +\
-                       " These common words are expected in most if not all documents." +\
-                       " On the other hand, the least frequent words include mostly typos and other mistakes," +\
-                       " and precise numeric terms that are context specific or unique mistakes that are" +\
-                       " not expected to repeat themselves."
+                       "3) Top 10 most frequent words include some 'Stop Words', as we know, from Zipf Law, that\n"+\
+                       "    we learned in class, Stop Words are the most frequent words in English language.\n" +\
+                       "    These common words are expected in most if not all documents.\n" +\
+                       "    On the other hand, the least frequent words include mostly typos and other mistakes,\n" +\
+                       "    and precise numeric terms that are context specific or unique mistakes that are\n" +\
+                       "    not expected to repeat themselves."
 
     writeToFile(finalFileContent, output_dir + 'Part_3.txt')
 

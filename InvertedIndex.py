@@ -55,7 +55,7 @@ def InvertedIndex(input_dir, output_dir):
                     index_object.index[word] = [internal_index]
                 else:
                     index_object.index[word].append(internal_index)
-        if num % 2000 == 0:
+        if num % 200 == 0:
             index_object.index.sync()
         progress_bar(num / num_files, "of TREC files")
         num += 1

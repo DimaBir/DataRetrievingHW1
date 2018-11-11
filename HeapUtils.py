@@ -1,16 +1,20 @@
 import heapq
-
+from InvertedIndex import progress_bar
 
 # Creates and fills min and max heaps
 # Params: dictionary: dictionary to parse
 # Returns: Tuple(minHeap, maxHeap)
 def createHeaps(dictionary):
+    num_terms = len(dictionary)
+    num = 1
+    print("Calculating most and least frequent terms out of {} terms...".format(num_terms))
     minHeap = MinHeap()
     maxHeap = MaxHeap()
     for key, value in dictionary.items():
         maxHeap.pushMaxHeap((key, len(value)))
         minHeap.pushMinHeap((key, len(value)))
-
+        progress_bar(num / num_terms, "of terms.")
+        num += 1
     return minHeap, maxHeap
 
 
