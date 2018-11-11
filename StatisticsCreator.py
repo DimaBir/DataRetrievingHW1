@@ -41,10 +41,12 @@ def createStatstics(output_dir):
 
     finalFileContent = "1) Top 10 most common terms: " + topTenMostFrequentWordsAsString + "\n" +\
                        "2) Top 10 least common terms: " + topTenLeastFrequentWordsAsString + "\n" +\
-                       "3) Top 10 most frequent words are includes some 'Stop Words', as we know, from Zipf Law, that"+\
-                       " we learned in the class, Stop Words are most frequent words in English language.In other" +\
-                       " hand, Least frequent words are regular words, and dependent on the subject, so they are" +\
-                       " exists in specific documents that describes that subject"
+                       "3) Top 10 most frequent words include some 'Stop Words', as we know, from Zipf Law, that"+\
+                       " we learned in class, Stop Words are the most frequent words in English language." +\
+                       " These common words are expected in most if not all documents." +\
+                       " On the other hand, the least frequent words include mostly typos and other mistakes," +\
+                       " and precise numeric terms that are context specific or unique mistakes that are" +\
+                       " not expected to repeat themselves."
 
     writeToFile(finalFileContent, output_dir + 'Part_3.txt')
 
