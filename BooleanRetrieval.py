@@ -56,7 +56,7 @@ class TreeNode(object):
             while i < len(left_ret):
                 while j < len(right_ret) and right_ret[j] < left_ret[i]:
                     j += 1
-                if j < len(right_ret) and right_ret[j] > left_ret[i]:
+                if (j < len(right_ret) and right_ret[j] > left_ret[i]) or j >= len(right_ret):
                     retval.append(left_ret[i])
                 i += 1
         return retval
