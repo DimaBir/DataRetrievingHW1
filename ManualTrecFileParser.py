@@ -58,6 +58,3 @@ def RegexParseTrecFile(pathtofile, clearStopWords=False):
         results[docno] = set(textTagRegexResultClear.split())
 
     return results
-
-
-print(RegexParseTrecFile("test.trec"))
