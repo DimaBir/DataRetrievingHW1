@@ -33,8 +33,8 @@ def createStatstics(output_dir):
     print("'and' had {} occurances".format(len(indexFile['and'])))
     print("'a' has {} occurances".format(len(indexFile['a'])))
     print("'war' has {} occurances".format(len(indexFile['war'])))
-    topTenMostFrequentWords = DictionaryUtils.getNLargest(10, maxHeap)
-    topTenLeastFrequentWords = DictionaryUtils.getNSmallest(10, minHeap)
+    topTenMostFrequentWords = DictionaryUtils.getNLargest(10, minHeap)
+    topTenLeastFrequentWords = DictionaryUtils.getNSmallest(10, maxHeap)
 
     topTenMostFrequentWordsAsString  = formatListToStr(topTenMostFrequentWords)
     topTenLeastFrequentWordsAsString  = formatListToStr(topTenLeastFrequentWords)

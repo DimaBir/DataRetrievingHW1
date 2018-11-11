@@ -1,3 +1,3 @@
-1) Top 10 most common terms: australiavietnam, nghi, phan, lunar, occasionally, inmates, war, former, would, said
-2) Top 10 least common terms: the, of, said, on, that, they, would, officials, war, south
+1) Top 10 most common terms: the, of, in, a, and, to, for, said, on, that
+2) Top 10 least common terms: 283031, australiavietnam, radelats, metveit, detered, wettre, rathebe, toralf, weekwas, nspca
 3) Top 10 most frequent words are includes some 'Stop Words', as we know, from Zipf Law, that we learned in the class, Stop Words are most frequent words in English language.In other hand, Least frequent words are regular words, and dependent on the subject, so they are exists in specific documents that describes that subject
