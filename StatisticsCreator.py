@@ -28,11 +28,6 @@ def writeToFile(str, path):
 def createStatstics(output_dir):
     indexFile = shelve.open(output_dir + 'index')
     (minHeap, maxHeap) = HeapUtils.createHeaps(indexFile)
-    print("Some checks...")
-    print("'the' has {} occurances".format(len(indexFile['the'])))
-    print("'and' had {} occurances".format(len(indexFile['and'])))
-    print("'a' has {} occurances".format(len(indexFile['a'])))
-    print("'war' has {} occurances".format(len(indexFile['war'])))
     topTenMostFrequentWords = DictionaryUtils.getNLargest(10, minHeap)
     topTenLeastFrequentWords = DictionaryUtils.getNSmallest(10, maxHeap)
 
