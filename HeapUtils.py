@@ -38,7 +38,7 @@ class MinHeap(Heap):
         # If heap already have at least 10 elements compare with min, if greater push current
         if len(self.heap) >= 10:
             minElement = self.popMinHeap()
-            if minElement[1] <= item[1]:
+            if minElement[1] >= item[1]:
                 item = (minElement[0], minElement[1])
         heapq.heappush(self.heap, item)
         return
@@ -61,7 +61,7 @@ class MaxHeap(Heap):
             # Get Max Element in Heap
             maxElement = self.popMaxHeap()
             # If max element of heap is lower then current item (or grater in the positive context) we will leave it
-            if -maxElement[1] <= item[1]:
+            if -maxElement[1] >= item[1]:
                 # Push max element back into heap
                 item = (maxElement[0], -maxElement[1])
         heapq.heappush(self.heap, (item[0], item[1]))
